@@ -1,15 +1,17 @@
 import cors from "cors";
 import express from "express";
+import helmet from "helmet";
 import morgan from "morgan";
-import Vault from "./auth/vault.js";
 import { default as v1 } from "./routes/v1/router.js";
+import Vault from "./src/vault.js";
 
 const app = express();
 app.use(cors());
+app.use(helmet());
 app.use(morgan("combined"));
 app.use(express.urlencoded({ extended: false }));
 
-// fetch pinecone key from hasicorp vault
+// fetch pinecone key from hashicorp vault
 const vault = new Vault(
   process.env.HCP_CLIENT_ID ?? "",
   process.env.HCP_CLIENT_SECRET ?? "",

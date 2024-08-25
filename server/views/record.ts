@@ -28,6 +28,15 @@ const createRecordPage = () => {
           >
             Recall
           </button>
+          <button
+            class="menu-button"
+            hx-trigger="click"
+            hx-get="http://localhost:42000/v1/remind"
+            hx-target="#tab-content"
+            hx-swap="innerHTML"
+            >
+              Remind
+          </button>
         </div>
       <div class="content">
           <textarea class="notes" placeholder="Write your notes here" required></textarea>

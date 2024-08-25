@@ -1,4 +1,4 @@
-const createRecallPage = () => {
+const createRemindPage = () => {
   // additionaly logic goes here
 
   return /*html*/ `
@@ -14,35 +14,35 @@ const createRecallPage = () => {
               Record
             </button>
             <button
-             class="menu-button"
-             hx-trigger="click"
-             hx-get="http://localhost:42000/v1/recap"
-             hx-target="#tab-content"
-             hx-swap="innerHTML"
+            class="menu-button"
+              hx-trigger="click"
+              hx-get="http://localhost:42000/v1/recap"
+              hx-target="#tab-content"
+              hx-swap="innerHTML"
             >
               Recap
             </button>
             <button
               class="menu-button"
-              id="selected-menu-button"
+              hx-trigger="click"
+              hx-get="http://localhost:42000/v1/recall"
+              hx-target="#tab-content"
+              hx-swap="innerHTML"
             >
               Recall
             </button>
             <button
               class="menu-button"
-              hx-trigger="click"
-              hx-get="http://localhost:42000/v1/remind"
-              hx-target="#tab-content"
-              hx-swap="innerHTML"
+              id="selected-menu-button"
             >
               Remind
-          </button>
+            </button>
           </div>
         <div class="content">
-            <div>Recall</div>
+            <div>Remind</div>
         </div>
     </div>
     `;
 };
 
-export default createRecallPage;
+export default createRemindPage;

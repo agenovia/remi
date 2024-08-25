@@ -28,9 +28,18 @@ const createRecapPage = () => {
           >
             Recall
           </button>
+          <button
+            class="menu-button"
+            hx-trigger="click"
+            hx-get="http://localhost:42000/v1/remind"
+            hx-target="#tab-content"
+            hx-swap="innerHTML"
+            >
+              Remind
+          </button>
         </div>
       <div class="content">
-          <div>Hello</div>
+          <div>Recap</div>
       </div>
   </div>
   `;
