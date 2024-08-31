@@ -7,6 +7,17 @@ import createRemindPage from "../../views/remind.js";
 
 const router = express.Router();
 
+let options = {};
+
+export const initRoute = (opt: {
+  pineconeSK: string;
+  supabaseURL: string;
+  supabaseSK: string;
+}) => {
+  options = opt;
+  console.log(options);
+};
+
 router.get("/", (req, res) => {
   res.send(createLoginPage());
 });

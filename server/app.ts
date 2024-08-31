@@ -5,7 +5,7 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import Vault from "./lib/vault.js";
-import { default as v1 } from "./routes/v1/router.js";
+import { initRoute, default as v1 } from "./routes/v1/router.js";
 
 dotenv.config();
 
@@ -24,12 +24,13 @@ const vault = new Vault(
 );
 
 // fetch our secrets
-const [pineconeSk, supabase_url, supabase_anon_key] = [
-  (await vault.fetchSecret("pinecone"))?.value,
-  (await vault.fetchSecret("supabase_url"))?.value,
-  (await vault.fetchSecret("supabase_anon_key"))?.value,
+const [pineconeSK, supabaseURL, supabaseSK] = [
+  (await vault.fetchSecret("pinecone"))?.value ?? "",
+  (await vault.fetchSecret("supabase_url"))?.value ?? "",
+  (await vault.fetchSecret("supabase_anon_key"))?.value ?? "",
 ];
 
+initRoute({ pineconeSK, supabaseURL, supabaseSK });
 app.use("/", v1);
 
 app.listen(42000, () => {
