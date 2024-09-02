@@ -7,7 +7,7 @@ const createRecapPage = () => {
           <button
             class="menu-button"
             hx-trigger="click"
-            hx-get="http://localhost:42000/v1/record"
+            hx-get="http://localhost:42000/record"
             hx-target="#tab-content"
             hx-swap="innerHTML"
           >
@@ -22,7 +22,7 @@ const createRecapPage = () => {
           <button
             class="menu-button"
             hx-trigger="click"
-            hx-get="http://localhost:42000/v1/recall"
+            hx-get="http://localhost:42000/recall"
             hx-target="#tab-content"
             hx-swap="innerHTML"
           >
@@ -31,7 +31,7 @@ const createRecapPage = () => {
           <button
             class="menu-button"
             hx-trigger="click"
-            hx-get="http://localhost:42000/v1/remind"
+            hx-get="http://localhost:42000/remind"
             hx-target="#tab-content"
             hx-swap="innerHTML"
             >

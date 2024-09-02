@@ -89,6 +89,7 @@ div.content {
   flex-direction: column;
   gap: 12px;
   animation: fadein 0.3s ease-in;
+  box-sizing: border-box;
 }
 
 div.content-buttons {

@@ -1,4 +1,5 @@
 import express from "express";
+import { PineconeHandler } from "../../src/handlers.js";
 import createLoginPage from "../../views/login.js";
 import createRecallPage from "../../views/recall.js";
 import createRecapPage from "../../views/recap.js";
@@ -7,15 +8,17 @@ import createRemindPage from "../../views/remind.js";
 
 const router = express.Router();
 
-let options = {};
+var options = {};
+var db: PineconeHandler;
 
 export const initRoute = (opt: {
   pineconeSK: string;
   supabaseURL: string;
   supabaseSK: string;
+  indexName: string;
 }) => {
   options = opt;
-  console.log(options);
+  db = new PineconeHandler(opt.pineconeSK, opt.indexName);
 };
 
 router.get("/", (req, res) => {
@@ -35,7 +38,8 @@ router
   .all((req, res, next) => next())
   .get((req, res) => res.send(createRecordPage()))
   .post((req, res, next) => {
-    next(new Error("Not Implemented"));
+    db.upsert(req.body.notes);
+    res.send(createRecordPage());
   })
   .put((req, res, next) => {
     next(new Error("Not Implemented"));

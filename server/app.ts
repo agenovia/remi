@@ -30,7 +30,12 @@ const [pineconeSK, supabaseURL, supabaseSK] = [
   (await vault.fetchSecret("supabase_anon_key"))?.value ?? "",
 ];
 
-initRoute({ pineconeSK, supabaseURL, supabaseSK });
+initRoute({
+  pineconeSK,
+  supabaseURL,
+  supabaseSK,
+  indexName: "multilingual-e5-large",
+});
 app.use("/", v1);
 
 app.listen(42000, () => {

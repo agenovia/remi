@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@langchain/anthropic": "^0.2.10",
+    "@pinecone-database/pinecone": "^3.0.2",
     "@supabase/auth-helpers-shared": "^0.7.0",
     "@supabase/ssr": "^0.5.0",
     "@supabase/supabase-js": "^2.45.2",

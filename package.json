@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@langchain/anthropic": "^0.2.15",
+    "@langchain/pinecone": "^0.0.9",
+    "@pinecone-database/pinecone": "^3.0.2"
+  }
+}
