@@ -24,16 +24,18 @@ const vault = new Vault(
 );
 
 // fetch our secrets
-const [pineconeSK, supabaseURL, supabaseSK] = [
+const [pineconeSK, supabaseURL, supabaseSK, openAIApiKey] = [
   (await vault.fetchSecret("pinecone"))?.value ?? "",
   (await vault.fetchSecret("supabase_url"))?.value ?? "",
   (await vault.fetchSecret("supabase_anon_key"))?.value ?? "",
+  (await vault.fetchSecret("openai_api_key"))?.value ?? "",
 ];
 
 initRoute({
   pineconeSK,
   supabaseURL,
   supabaseSK,
+  openAIApiKey,
   indexName: "multilingual-e5-large",
 });
 app.use("/", v1);

@@ -1,5 +1,6 @@
 import { Index, Pinecone } from "@pinecone-database/pinecone";
 import { v4 as uuidv4 } from "uuid";
+import { AnthropicInput, ChatAnthropic } from "@langchain/anthropic";
 
 abstract class DatabaseHandler {
   abstract upsert(content: string, metadata?: Record<string, string>): void;

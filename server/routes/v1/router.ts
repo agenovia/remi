@@ -1,5 +1,7 @@
 import express from "express";
-import { PineconeHandler } from "../../src/handlers.js";
+import createOpenAIEmbeddings from "../../lib/embeddings.js";
+import { PineconeHandler } from "../../lib/handlers.js";
+import getPineconeVectorStore from "../../lib/pineconeHandlers.js";
 import createLoginPage from "../../views/login.js";
 import createRecallPage from "../../views/recall.js";
 import createRecapPage from "../../views/recap.js";
@@ -16,9 +18,20 @@ export const initRoute = (opt: {
   supabaseURL: string;
   supabaseSK: string;
   indexName: string;
+  openAIApiKey: string;
 }) => {
   options = opt;
-  db = new PineconeHandler(opt.pineconeSK, opt.indexName);
+  // db = new PineconeHandler(opt.pineconeSK, opt.indexName);
+  const embeddings = createOpenAIEmbeddings({ openAIApiKey: opt.openAIApiKey });
+
+  (async () => {
+    const pc = await getPineconeVectorStore({
+      embeddings,
+      apiKey: opt.pineconeSK,
+      indexName: "openai",
+    });
+    db = pc;
+  })();
 };
 
 router.get("/", (req, res) => {
