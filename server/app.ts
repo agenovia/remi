@@ -36,7 +36,7 @@ initRoute({
   supabaseURL,
   supabaseSK,
   openAIApiKey,
-  indexName: "multilingual-e5-large",
+  indexName: "openai",
 });
 app.use("/", v1);
 

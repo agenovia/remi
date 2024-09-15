@@ -1,69 +1,61 @@
-import { Index, Pinecone } from "@pinecone-database/pinecone";
-import { v4 as uuidv4 } from "uuid";
-import { AnthropicInput, ChatAnthropic } from "@langchain/anthropic";
+import type { Document } from "@langchain/core/documents";
+import { OpenAIEmbeddings } from "@langchain/openai";
+import { PineconeStore, PineconeStoreParams } from "@langchain/pinecone";
 
-abstract class DatabaseHandler {
-  abstract upsert(content: string, metadata?: Record<string, string>): void;
-  abstract query(query: string, metadata?: Record<string, string>): string;
+import { Pinecone as PineconeClient } from "@pinecone-database/pinecone";
+
+interface PineconeVectorStoreOptions {
+  embeddings: OpenAIEmbeddings;
+  params?: PineconeStoreParams;
+  apiKey: string;
+  indexName: string;
 }
 
-export class PineconeHandler extends DatabaseHandler {
-  private apiKey: string;
-  private indexName: string;
-  private index: Index;
-  private client: Pinecone;
+const getPineconeVectorStore = async ({
+  embeddings,
+  params,
+  apiKey,
+  indexName,
+}: PineconeVectorStoreOptions) => {
+  const client = new PineconeClient({ apiKey });
+  const index = client.Index(indexName);
+  const defaultConfig: PineconeStoreParams = {
+    maxConcurrency: 5,
+  };
+  const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
+    ...defaultConfig,
+    ...params,
+    pineconeIndex: index,
+  });
+  return new PineconeHandler(vectorStore);
+};
 
-  constructor(apiKey: string, indexName: string) {
-    super();
-    this.apiKey = apiKey;
-    this.indexName = indexName;
-    this.client = this.getClient();
-    this.index = this.getIndex();
+export class PineconeHandler {
+  vectorStore: PineconeStore;
+
+  constructor(vectorStore: PineconeStore) {
+    this.vectorStore = vectorStore;
   }
 
-  private getClient = () => {
-    return new Pinecone({
-      apiKey: this.apiKey,
-    });
-  };
+  insert = (content: string, tags?: {}) => {
+    const metadata = {
+      ...tags,
+      timestamp: Date.now(),
+    };
+    const doc: Document = {
+      pageContent: content,
+      metadata,
+    };
 
-  private getIndex = () => {
-    return this.client.Index(this.indexName);
-  };
-
-  // this creates an embedding using our project
-  // by calling our index name
-  private getEmbedding = async (passage: string) => {
-    // TODO(agenovia): we need to tokenize
-    const embedding = await this.client.inference.embed(
-      this.indexName,
-      [passage],
-      {
-        inputType: "passage",
-      }
-    );
-    return embedding;
-  };
-
-  // we do an index upsert, but we call inference using
-  // the client object
-  upsert = (content: string, metadata?: Record<string, string>) => {
     (async () => {
-      const id = uuidv4();
-      const embedding = await this.getEmbedding(content);
-      const data = {
-        id: id,
-        values: embedding[0].values ?? [],
-        metadata: metadata,
-      };
-      await this.index.upsert([data]);
+      this.vectorStore.addDocuments([doc]);
     })();
   };
 
-  query = (query: string, metadata: Record<string, string>) => {
-    async () => {
-      const embedding = await this.getEmbedding(query);
-    };
-    return query;
+  retrieve = async (query: string) => {
+    const retriever = this.vectorStore.asRetriever();
+    return await retriever.invoke(query);
   };
 }
+
+export default getPineconeVectorStore;

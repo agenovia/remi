@@ -1,7 +1,6 @@
 import express from "express";
 import createOpenAIEmbeddings from "../../lib/embeddings.js";
-import { PineconeHandler } from "../../lib/handlers.js";
-import getPineconeVectorStore from "../../lib/pineconeHandlers.js";
+import getPineconeVectorStore, { PineconeHandler } from "../../lib/handlers.js";
 import createLoginPage from "../../views/login.js";
 import createRecallPage from "../../views/recall.js";
 import createRecapPage from "../../views/recap.js";
@@ -10,7 +9,6 @@ import createRemindPage from "../../views/remind.js";
 
 const router = express.Router();
 
-var options = {};
 var db: PineconeHandler;
 
 export const initRoute = (opt: {
@@ -20,7 +18,6 @@ export const initRoute = (opt: {
   indexName: string;
   openAIApiKey: string;
 }) => {
-  options = opt;
   // db = new PineconeHandler(opt.pineconeSK, opt.indexName);
   const embeddings = createOpenAIEmbeddings({ openAIApiKey: opt.openAIApiKey });
 
@@ -51,7 +48,8 @@ router
   .all((req, res, next) => next())
   .get((req, res) => res.send(createRecordPage()))
   .post((req, res, next) => {
-    db.upsert(req.body.notes);
+    // db.upsert(req.body.notes);
+    db.insert(req.body.notes);
     res.send(createRecordPage());
   })
   .put((req, res, next) => {
@@ -63,7 +61,11 @@ router
   .all((req, res, next) => next())
   .get((req, res) => res.send(createRecapPage()))
   .post((req, res, next) => {
-    next(new Error("Not Implemented"));
+    // next(new Error("Not Implemented"));
+    console.log(req.body.timespan);
+    (async () => {
+      console.log(await db.retrieve("cute"));
+    })();
   });
 
 router

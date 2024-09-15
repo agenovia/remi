@@ -39,7 +39,11 @@ const createRecapPage = () => {
           </button>
         </div>
       <div class="content">
-          <div>Recap</div>
+          <div class="nav-container">
+            <button class="menu-button" hx-post="http://localhost:42000/recap" hx-vals='{"timespan": "1 day"}'>Last Day</button>
+            <button class="menu-button">Last Week</button>
+            <button class="menu-button">Last Month</button>
+          </div>
       </div>
   </div>
   `;
