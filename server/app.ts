@@ -15,6 +15,7 @@ app.use(helmet());
 app.use(morgan("combined"));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
 
 // access hcp vault
 const vault = new Vault(
